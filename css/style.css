@@ -1,0 +1,305 @@
+html,
+body{
+    margin:0;
+    padding:0;
+}
+
+#map{
+    width:100%;
+    height:100%;
+}
+
+.menu-btn{
+
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:14px 16px;
+
+    margin-top:8px;
+
+    border-radius:14px;
+
+    color:white;
+
+    transition:all .25s ease;
+
+    font-weight:500;
+
+}
+
+.menu-btn:hover{
+
+    background:rgba(255,255,255,.12);
+
+    transform:translateX(6px);
+
+}
+
+.menu-btn.active{
+
+    background:rgba(0,0,0,.18);
+
+    box-shadow:0 8px 18px rgba(0,0,0,.25);
+
+}
+
+.icon-btn{
+
+    width:40px;
+
+    height:40px;
+
+    border-radius:12px;
+
+    background:#f3f4f6;
+
+    transition:.3s;
+
+}
+
+.icon-btn:hover{
+
+    background:#e5e7eb;
+
+}
+
+.leaflet-container{
+
+    background:#ddd;
+
+}
+
+.base-item {
+
+    width: 100%;
+
+    padding: 12px;
+
+    margin-bottom: 10px;
+
+    border-radius: 10px;
+
+    background: #f3f4f6;
+
+    transition: .2s;
+
+    text-align: left;
+
+}
+
+.base-item:hover {
+
+    background: #dbeafe;
+
+}
+
+/* ===== Crosshair cursor while an add-mode tool (marker, etc.) is armed ===== */
+
+.crosshair-cursor {
+    cursor: crosshair !important;
+}
+
+/* ===== Layers panel ===== */
+
+.layer-row {
+    background: #f9fafb;
+    border: 1px solid #eef0f4;
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+
+.layer-name-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 2px 0;
+    color: #111827;
+}
+
+.layer-name-input:focus {
+    outline: none;
+    border-bottom: 1px solid #6366f1;
+}
+
+.icon-sm {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #4b5563;
+    flex-shrink: 0;
+    transition: .2s;
+}
+
+.icon-sm:hover {
+    background: #e5e7eb;
+}
+
+.remove-layer,
+.marker-del {
+    color: #dc2626;
+}
+
+.remove-layer:hover,
+.marker-del:hover {
+    background: #fee2e2;
+}
+
+.vis-toggle {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #4f46e5;
+    flex-shrink: 0;
+    transition: .2s;
+}
+
+.vis-toggle:hover {
+    background: #e0e7ff;
+}
+
+.opacity-slider {
+    accent-color: #4f46e5;
+}
+
+.style-color {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+/* ===== Markers panel ===== */
+
+.marker-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f9fafb;
+    border: 1px solid #eef0f4;
+    border-radius: 12px;
+    padding: 8px 10px;
+}
+
+.cat-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    flex-shrink: 0;
+}
+
+.add-marker-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(to right, #4f46e5, #6366f1);
+    color: white;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 10px;
+    transition: .2s;
+}
+
+.add-marker-btn:hover {
+    opacity: .9;
+}
+
+.add-marker-btn i {
+    width: 18px;
+    height: 18px;
+}
+
+/* Marker pin icon shown on the map */
+
+.marker-pin {
+    width: 32px;
+    height: 32px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .35);
+    border: 2px solid white;
+}
+
+.marker-pin i {
+    transform: rotate(45deg);
+    color: white;
+    width: 16px;
+    height: 16px;
+}
+
+/* Marker edit popup */
+
+.marker-popup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 200px;
+}
+
+.marker-popup input,
+.marker-popup select,
+.marker-popup textarea {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-size: 13px;
+    font-family: inherit;
+}
+
+.marker-popup textarea {
+    resize: vertical;
+    min-height: 50px;
+}
+
+.mp-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.mp-actions button {
+    flex: 1;
+    padding: 6px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.mp-save {
+    background: #4f46e5;
+    color: white;
+}
+
+.mp-save:hover {
+    background: #4338ca;
+}
+
+.mp-delete {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.mp-delete:hover {
+    background: #fecaca;
+}

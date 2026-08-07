@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>GeoVista</title>
+        <!-- Leaflet Draw CSS -->
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <!-- Leaflet CSS -->
+        <link rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="css/style.css">
+        <script src="https://unpkg.com/lucide@latest"></script>
+    </head>
+
+    <body class="bg-gray-100">
+
+        <div class="flex h-screen p-2 gap-2">
+
+            <!-- Sidebar -->
+
+            <aside
+                class="w-72 rounded-xl bg-gradient-to-b from-indigo-700 via-violet-600 to-indigo-700 text-white flex flex-col shadow-xl">
+
+                <!-- GIS Hero Card -->
+
+                <div class="p-5">
+
+                    <div
+                        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-700 p-5 shadow-lg">
+
+                        <!-- Decorative Circle -->
+
+                        <div
+                            class="absolute -top-10 -right-10 w-28 h-28 bg-white/10 rounded-full">
+
+                        </div>
+
+                        <div
+                            class="absolute -bottom-8 -left-8 w-20 h-20 bg-white/10 rounded-full">
+
+                        </div>
+
+                        <h1 class="text-2xl font-bold">
+
+                            GeoVista
+
+                        </h1>
+
+                        <p class="text-sm text-blue-100 mt-1">
+
+                            Interactive Web GIS
+
+                        </p>
+
+                        <div class="mt-6 space-y-2 text-sm">
+
+                            <div class="flex justify-between">
+
+                                <span>CRS</span>
+
+                                <span id="crsLabel">EPSG:3857</span>
+
+                            </div>
+
+                            <div class="flex justify-between">
+
+                                <span>Layers</span>
+
+                                <span id="layerCount">1</span>
+
+                            </div>
+
+                            <div class="flex justify-between">
+
+                                <span>Zoom</span>
+
+                                <span id="zoomLevel">13</span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Menu -->
+                <!-- Navigation -->
+                <nav class="px-4 flex-1">
+
+                    <button id="dashboardBtn" class="menu-btn active">
+                        <i data-lucide="layout-dashboard"></i>
+                        <span>Dashboard</span>
+                    </button>
+
+                    <button id="basemapBtn" class="menu-btn">
+                        <i data-lucide="map"></i>
+                        <span>Basemaps</span>
+                    </button>
+
+                    <button id="layersBtn" class="menu-btn">
+                        <i data-lucide="layers"></i>
+                        <span>Layers</span>
+                    </button>
+
+                    <button id="importBtn" class="menu-btn">
+                        <i data-lucide="upload"></i>
+                        <span>Import Data</span>
+                    </button>
+
+                    <button id="markersBtn" class="menu-btn">
+                        <i data-lucide="map-pin"></i>
+                        <span>Markers</span>
+                    </button>
+
+                    <button id="measureBtn" class="menu-btn">
+                        <i data-lucide="ruler"></i>
+                        <span>Measure</span>
+                    </button>
+
+                    <button id="drawBtn" class="menu-btn">
+                        <i data-lucide="pencil-ruler"></i>
+                        <span>Draw</span>
+                    </button>
+
+                    <button id="attributesBtn" class="menu-btn">
+                        <i data-lucide="table-properties"></i>
+                        <span>Attributes</span>
+                    </button>
+
+                    <button id="spatialDataBtn" class="menu-btn">
+                        <i data-lucide="database"></i>
+                        <span>Spatial Data</span>
+                    </button>
+
+                    <button id="settingsBtn" class="menu-btn">
+                        <i data-lucide="settings"></i>
+                        <span>Settings</span>
+                    </button>
+
+                </nav>
+
+                <!-- Bottom Card -->
+
+                <div class="p-5">
+
+                    <div
+                        class="bg-white/10 rounded-xl p-4">
+
+                        <p class="text-sm text-indigo-200">
+                            GeoVista
+                        </p>
+
+                        <h3 class="font-bold text-lg">
+                            Web GIS Platform
+                        </h3>
+
+                        <p class="text-xs text-indigo-200 mt-2">
+                            Version 1.0
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+            <!-- Right Side -->
+
+            <div class="flex-1 flex flex-col gap-2">
+
+                <!-- Header -->
+
+                <header
+                    class="h-16 bg-white rounded-xl shadow flex items-center justify-between px-6">
+
+                    <div>
+
+                        <h1 class="font-bold text-xl">
+                            GeoVista
+                        </h1>
+
+                        <p class="text-sm text-gray-500">
+
+                            Interactive Web GIS
+
+                        </p>
+
+                    </div>
+
+                    <input
+                        placeholder="Search location..."
+                        class="w-96 border rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500">
+
+                    <div class="flex gap-3">
+
+                        <button class="icon-btn">🔔</button>
+
+                        <button class="icon-btn">🌙</button>
+
+                        <button class="icon-btn">⚙</button>
+
+                    </div>
+
+                </header>
+                <div
+                    id="toolPanel"
+                    class="hidden absolute top-24 left-80 z-[1000] w-80 rounded-xl bg-white shadow-2xl border">
+
+                    <div class="flex justify-between items-center p-4 border-b">
+
+                        <h2 id="panelTitle" class="font-bold text-lg">
+                            Basemaps
+                        </h2>
+
+                        <button id="closePanel">
+                            ✕
+                        </button>
+
+                    </div>
+
+                    <div id="panelContent" class="p-4">
+
+                    </div>
+
+                </div>
+
+                <!-- Map Card -->
+
+                <main
+                    class="flex-1 bg-white rounded-xl shadow p-4">
+
+                    <div
+                        id="map"
+                        class="w-full h-full rounded-xl overflow-hidden">
+
+                    </div>
+
+                </main>
+
+            </div>
+
+        </div>
+
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <!-- Leaflet Draw JS -->
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+        <script type="module" src="js/app.js"></script>
+        <script>
+
+lucide.createIcons();
+
+</script>
+
+    </body>
