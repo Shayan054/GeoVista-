@@ -87,10 +87,18 @@ export function createMarker(latlng, data, openPopupForEdit = false) {
         category: data.category || "general",
         description: data.description || ""
     });
+    syncMarkerFeature(marker);
 
     marker.bindPopup(() => buildPopupContent(marker));
     marker.on("popupopen", () => bindPopupEvents(marker));
     marker.on("dragend", notify);
+    marker.on("click", () => {
+        document.dispatchEvent(
+            new CustomEvent("geovista:feature-selected", {
+                detail: { layerId: markerLayerId, featureId: id }
+            })
+        );
+    });
 
     markersLayer.addLayer(marker);
     refreshIcons();
@@ -99,6 +107,19 @@ export function createMarker(latlng, data, openPopupForEdit = false) {
     if (openPopupForEdit) marker.openPopup();
 
     return marker;
+}
+
+/**
+ * Leaflet's Marker.toGeoJSON() only includes properties if `layer.feature`
+ * is set - keep it synced so Export (GeoJSON/CSV) and .toGeoJSON() carry
+ * the marker's name/category/description instead of just its geometry.
+ */
+function syncMarkerFeature(marker) {
+    const record = markerData.get(marker);
+    marker.feature = {
+        type: "Feature",
+        properties: { name: record.name, category: record.category, description: record.description }
+    };
 }
 
 function buildPopupContent(marker) {
@@ -132,6 +153,7 @@ function bindPopupEvents(marker) {
         record.name = popupEl.querySelector(".mp-name").value.trim() || "Untitled marker";
         record.category = popupEl.querySelector(".mp-category").value;
         record.description = popupEl.querySelector(".mp-desc").value;
+        syncMarkerFeature(marker);
 
         marker.setIcon(makeIcon(record.category));
         refreshIcons();

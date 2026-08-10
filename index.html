@@ -198,17 +198,21 @@
 
                     </div>
 
-                    <input
-                        placeholder="Search location..."
-                        class="w-96 border rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <div class="relative w-96">
+                        <input
+                            id="searchInput"
+                            placeholder="Search location or lat,lng..."
+                            class="w-full border rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <div id="searchResults" class="search-results hidden"></div>
+                    </div>
 
                     <div class="flex gap-3">
 
-                        <button class="icon-btn">🔔</button>
+                        <button id="locateBtn" class="icon-btn" title="Locate Me"><i data-lucide="locate-fixed"></i></button>
 
-                        <button class="icon-btn">🌙</button>
+                        <button id="themeToggleBtn" class="icon-btn" title="Toggle dark mode">🌙</button>
 
-                        <button class="icon-btn">⚙</button>
+                        <button id="headerSettingsBtn" class="icon-btn" title="Settings">⚙</button>
 
                     </div>
 
@@ -238,12 +242,20 @@
                 <!-- Map Card -->
 
                 <main
-                    class="flex-1 bg-white rounded-xl shadow p-4">
+                    class="flex-1 bg-white rounded-xl shadow p-4 flex flex-col gap-2">
 
                     <div
                         id="map"
-                        class="w-full h-full rounded-xl overflow-hidden">
+                        class="w-full flex-1 rounded-xl overflow-hidden">
 
+                    </div>
+
+                    <div id="statusBar" class="status-bar">
+                        <span id="sbCoords">Coords: —</span>
+                        <span id="sbZoom">Zoom: 5</span>
+                        <span id="sbCrs">EPSG:3857</span>
+                        <span id="sbScale">Scale: —</span>
+                        <span id="sbLayer">Layer: —</span>
                     </div>
 
                 </main>
@@ -256,6 +268,12 @@
         <!-- Leaflet Draw JS -->
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+        <!-- Turf.js (spatial analysis / measurement math) -->
+        <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+        <!-- Import Data: CSV / KML / Shapefile parsers -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+        <script src="https://unpkg.com/@tmcw/togeojson@5.8.1/dist/togeojson.umd.js"></script>
+        <script src="https://unpkg.com/shpjs@4.0.4/dist/shp.js"></script>
 
         <script type="module" src="js/app.js"></script>
         <script>

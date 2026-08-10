@@ -9,6 +9,7 @@ import { generateId } from "../utils/id.js";
 
 const layers = [];
 const listeners = [];
+let activeLayerId = null;
 
 /**
  * Subscribe to registry changes (layer added/removed/renamed/visibility).
@@ -99,6 +100,24 @@ export function getLayer(id) {
 
 export function getAllLayers() {
     return layers;
+}
+
+/**
+ * The "active" layer is the one Attributes/Spatial Data/Spatial Analysis
+ * panels operate on. Falls back to null if the id no longer exists.
+ */
+export function setActiveLayer(id) {
+    activeLayerId = id;
+    emit();
+}
+
+export function getActiveLayerId() {
+    if (activeLayerId && !getLayer(activeLayerId)) activeLayerId = null;
+    return activeLayerId;
+}
+
+export function getActiveLayer() {
+    return getLayer(getActiveLayerId());
 }
 
 export function setVisibility(id, visible) {
