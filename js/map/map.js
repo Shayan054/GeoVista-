@@ -11,23 +11,9 @@ export function createMap() {
 
     baseMaps.OpenStreetMap.addTo(map);
 
-    function switchBasemap(name) {
-
-        Object.values(baseMaps).forEach(layer => {
-
-            if (map.hasLayer(layer)) {
-                map.removeLayer(layer);
-            }
-
-        });
-
-        baseMaps[name].addTo(map);
-    }
-
     return {
         map,
         baseMaps,
-        switchBasemap,
         drawnItems
     };
 }

@@ -9,7 +9,8 @@ import {
     deleteMeasurement,
     focusMeasurement
 } from "../tools/measuretools.js";
-import { openPanel } from "./panel.js";
+import { openPanel, closePanel } from "./panel.js";
+import { showMapHud, hideMapHud } from "./mapHud.js";
 import { escapeHtml, refreshIcons } from "../utils/dom.js";
 import { isPanelOpenFor } from "./panelState.js";
 import { getUnitSystem, setUnitSystem, onSettingsChange } from "../core/settingsStore.js";
@@ -22,10 +23,28 @@ export function initMeasurePanel(map) {
     initialized = true;
 
     onMeasurementsChange(() => {
-        if (isPanelOpenFor("Measure")) renderMeasurePanel();
+        const state = getMeasureState();
+        if (state.active) {
+            closePanel();
+            renderMeasureHud(state, getUnitSystem());
+            return;
+        }
+
+        hideMapHud();
+        if (isPanelOpenFor("Measure")) {
+            renderMeasurePanel();
+        }
     });
+
     onSettingsChange(() => {
-        if (isPanelOpenFor("Measure")) renderMeasurePanel();
+        const state = getMeasureState();
+        if (state.active) {
+            renderMeasureHud(state, getUnitSystem());
+            return;
+        }
+        if (isPanelOpenFor("Measure")) {
+            renderMeasurePanel();
+        }
     });
 }
 
@@ -34,41 +53,43 @@ export function renderMeasurePanel() {
     const unitSystem = getUnitSystem();
 
     if (state.active) {
-        renderActiveState(state, unitSystem);
+        closePanel();
+        renderMeasureHud(state, unitSystem);
         return;
     }
 
     renderIdleState(unitSystem);
 }
 
-function renderActiveState(state, unitSystem) {
+function renderMeasureHud(state, unitSystem) {
     const liveText = state.mode === "distance"
         ? formatLength(state.liveValueMeters, unitSystem)
         : formatArea(state.liveValueMeters, unitSystem);
 
-    openPanel(
-        "Measure",
-        `
-        <div class="measure-active">
-            <p class="text-sm text-gray-600">
+    showMapHud(`
+        <div class="map-hud-measure">
+            <p class="map-hud-title">
+                ${state.mode === "distance" ? "Measuring distance" : "Measuring area"}
+            </p>
+            <p class="map-hud-hint">
                 ${state.mode === "distance"
                     ? "Click the map to add points along the line."
                     : "Click the map to add polygon corners."}
-                Press <b>Finish</b> when done (min ${state.minPoints} points).
             </p>
-            <div class="measure-live-value">${liveText}</div>
-            <p class="text-xs text-gray-400">${state.pointCount} point${state.pointCount === 1 ? "" : "s"} placed</p>
-            <div class="mp-actions mt-3">
+            <div class="measure-live-value map-hud-value">${liveText}</div>
+            <p class="map-hud-meta">${state.pointCount} point${state.pointCount === 1 ? "" : "s"} placed · min ${state.minPoints}</p>
+            <div class="map-hud-actions">
                 <button id="finishMeasureBtn" class="mp-save">Finish</button>
                 <button id="cancelMeasureBtn" class="mp-delete">Cancel</button>
             </div>
         </div>
-        `
-    );
+    `);
 
     document.getElementById("finishMeasureBtn").addEventListener("click", () => {
         finishMeasurement();
+        renderMeasurePanel();
     });
+
     document.getElementById("cancelMeasureBtn").addEventListener("click", () => {
         cancelActiveMeasurement();
         renderMeasurePanel();
@@ -136,12 +157,13 @@ function renderIdleState(unitSystem) {
     });
 
     document.getElementById("measureDistanceBtn").addEventListener("click", () => {
+        closePanel();
         armDistanceMeasure();
-        renderMeasurePanel();
     });
+
     document.getElementById("measureAreaBtn").addEventListener("click", () => {
+        closePanel();
         armAreaMeasure();
-        renderMeasurePanel();
     });
 
     document.querySelectorAll(".measure-focus").forEach((btn) => {

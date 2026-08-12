@@ -1,5 +1,7 @@
 import { createMap } from "./map/map.js";
-import { openPanel, closePanel } from "./ui/panel.js";
+import { initPanelModal, closePanel } from "./ui/panel.js";
+import { showMapHud, hideMapHud } from "./ui/mapHud.js";
+import { bindDrawFeatureLayer } from "./utils/featurePopup.js";
 import { initializeDrawTool } from "./tools/drawtools.js";
 import { registerLayer, refresh as refreshLayers } from "./core/layerRegistry.js";
 import { registerTool, activateTool, deactivateAll } from "./core/toolManager.js";
@@ -19,7 +21,7 @@ import { initStatsBar } from "./ui/statsbar.js";
 
 initTheme();
 
-const { map, baseMaps, switchBasemap, drawnItems } = createMap();
+const { map, baseMaps, drawnItems } = createMap();
 
 const drawControl = initializeDrawTool(map, drawnItems);
 
@@ -48,44 +50,7 @@ initSettingsPanel(map);
 initSearch(map);
 initMapStatusBar(map);
 initStatsBar(map);
-
-document
-    .getElementById("closePanel")
-    .addEventListener("click", closePanel);
-
-document
-    .getElementById("basemapBtn")
-    .addEventListener("click", () => {
-
-        deactivateAll();
-
-        openPanel(
-            "Basemaps",
-            `
-            <button class="base-item" data-map="OpenStreetMap">OpenStreetMap</button>
-
-            <button class="base-item" data-map="Satellite">Satellite</button>
-
-            <button class="base-item" data-map="Dark">Dark</button>
-
-            <button class="base-item" data-map="Topographic">Topographic</button>
-            `
-        );
-
-        // Add click events after the panel content exists
-        document.querySelectorAll(".base-item").forEach(button => {
-
-            button.addEventListener("click", () => {
-
-                const mapName = button.dataset.map;
-
-                switchBasemap(mapName);
-
-            });
-
-        });
-
-    });
+initPanelModal();
 
 document
     .getElementById("layersBtn")
@@ -160,12 +125,30 @@ registerTool("draw", () => {
         map.removeControl(drawControl);
         drawControlAdded = false;
     }
+    hideMapHud();
 });
+
+function showDrawHud() {
+    showMapHud(`
+        <div class="map-hud-draw">
+            <p class="map-hud-title">Draw mode</p>
+            <p class="map-hud-hint">Use the toolbar on the map to pick a shape, then click and drag on the map to draw.</p>
+            <div class="map-hud-actions">
+                <button id="drawDoneBtn" class="mp-save">Done drawing</button>
+            </div>
+        </div>
+    `);
+
+    document.getElementById("drawDoneBtn").addEventListener("click", () => {
+        deactivateAll();
+    });
+}
 
 document
     .getElementById("drawBtn")
     .addEventListener("click", () => {
 
+        closePanel();
         activateTool("draw");
 
         if (!drawControlAdded) {
@@ -176,6 +159,8 @@ document
 
         }
 
+        showDrawHud();
+
     });
 
 map.on(L.Draw.Event.CREATED, function (event) {
@@ -184,15 +169,9 @@ map.on(L.Draw.Event.CREATED, function (event) {
 
     drawnItems.addLayer(layer);
 
-    layer.on("click", () => {
-        document.dispatchEvent(
-            new CustomEvent("geovista:feature-selected", {
-                detail: { layerId: drawnFeaturesEntry.id, featureId: String(L.Util.stamp(layer)) }
-            })
-        );
-    });
+    bindDrawFeatureLayer(layer, drawnFeaturesEntry.id);
 
-    refreshLayers(); // update layer count / feature count everywhere
+    refreshLayers();
 
 });
 

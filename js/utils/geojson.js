@@ -1,5 +1,5 @@
 import { generateId } from "./id.js";
-import { escapeHtml } from "./dom.js";
+import { buildFeaturePopupHtml } from "./featurePopup.js";
 
 const LAT_NAMES = ["lat", "latitude", "y"];
 const LON_NAMES = ["lon", "lng", "long", "longitude", "x"];
@@ -67,21 +67,6 @@ export function csvRowsToGeoJSON(rows, latCol, lonCol) {
     return { type: "FeatureCollection", features };
 }
 
-function buildFeaturePopupHtml(props) {
-    const entries = Object.entries(props).filter(([k]) => k !== "__gvId");
-    if (entries.length === 0) return `<p class="text-sm text-gray-500">No attributes</p>`;
-
-    const rows = entries
-        .slice(0, 10)
-        .map(
-            ([k, v]) =>
-                `<div class="feat-popup-row"><span class="feat-popup-key">${escapeHtml(k)}</span><span class="feat-popup-val">${escapeHtml(String(v))}</span></div>`
-        )
-        .join("");
-
-    return `<div class="feat-popup">${rows}</div>`;
-}
-
 /**
  * Builds a Leaflet GeoJSON layer styled to match the default layerRegistry
  * style, with popups and a "geovista:feature-selected" click dispatch so
@@ -104,6 +89,7 @@ export function buildLeafletLayer(geojson, layerIdRef) {
             const props = feature.properties || {};
             layer.bindPopup(() => buildFeaturePopupHtml(props));
             layer.on("click", () => {
+                layer.openPopup();
                 document.dispatchEvent(
                     new CustomEvent("geovista:feature-selected", {
                         detail: { layerId: layerIdRef.current, featureId: props.__gvId }

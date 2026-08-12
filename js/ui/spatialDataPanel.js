@@ -74,7 +74,8 @@ export function renderSpatialDataPanel() {
                 <div id="analysisFeedback" class="mt-2"></div>
             </div>
         </div>
-        `
+        `,
+        { wide: true }
     );
 
     document.getElementById("sdLayerSelect").addEventListener("change", (e) => {

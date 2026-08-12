@@ -36,7 +36,7 @@ export function renderAttributesPanel() {
     const layers = getAllLayers();
 
     if (layers.length === 0) {
-        openPanel("Attributes", `<p class="text-gray-500 text-sm">No layers loaded yet.</p>`);
+        openPanel("Attributes", `<p class="text-gray-500 text-sm">No layers loaded yet.</p>`, { wide: true });
         return;
     }
 
@@ -67,7 +67,8 @@ export function renderAttributesPanel() {
             <p id="attrCount" class="text-xs text-gray-400 mt-2"></p>
             <div id="attrTableWrap" class="attr-table-wrap mt-2"></div>
         </div>
-        `
+        `,
+        { wide: true }
     );
 
     document.getElementById("attrLayerSelect").addEventListener("change", (e) => {
