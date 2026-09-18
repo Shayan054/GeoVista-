@@ -903,3 +903,61 @@ body.dark-mode .map-hud-hint,
 body.dark-mode .map-hud-meta {
     color: #9ca3af;
 }
+
+/* Responsive app shell: keep the map usable while navigation becomes a drawer. */
+#appShell { height: 100vh; height: 100dvh; }
+#appSidebar { flex: 0 0 18rem; }
+#sidebarNav { min-height: 0; overflow-y: auto; }
+.header-brand { display: flex; align-items: center; gap: .75rem; min-width: 0; }
+.header-search { flex: 1 1 12rem; max-width: 24rem; min-width: 0; margin-inline: 1rem; }
+.header-actions { flex-shrink: 0; }
+.mobile-menu-toggle { display: none; align-items: center; justify-content: center; flex-shrink: 0; }
+.sidebar-backdrop[hidden] { display: none !important; }
+
+@media (max-width: 1050px) {
+    #appSidebar { flex-basis: 14.5rem; }
+    #appHeader { padding-inline: 1rem; }
+    .header-search { margin-inline: .5rem; }
+}
+
+@media (max-width: 768px) {
+    #appShell { padding: .5rem; }
+    #appSidebar {
+        position: fixed; top: .5rem; bottom: .5rem; left: .5rem;
+        width: min(18rem, calc(100vw - 3rem));
+        z-index: 1900; transform: translateX(calc(-100% - 1rem));
+        transition: transform .25s ease;
+    }
+    #appSidebar.mobile-open { transform: translateX(0); }
+    .sidebar-backdrop:not([hidden]) {
+        display: block; position: fixed; inset: 0; z-index: 1800;
+        background: rgba(15, 23, 42, .55);
+    }
+    .mobile-menu-toggle { display: inline-flex; }
+    #appMain { width: 100%; }
+    #appHeader { height: auto; min-height: 4rem; flex-wrap: wrap; gap: .5rem; padding: .5rem .75rem; }
+    .header-brand { flex: 1 1 auto; }
+    .header-brand p { display: none; }
+    .header-search { order: 3; flex: 1 0 100%; max-width: none; margin: 0; }
+    .header-actions { gap: .25rem; }
+    .header-actions .icon-btn, .mobile-menu-toggle { width: 40px; height: 40px; }
+    #appMain main { padding: .5rem; }
+    .status-bar { gap: 12px; max-width: 100%; }
+    .tool-modal { padding: .5rem; }
+    .tool-modal-dialog, .tool-modal-dialog--wide {
+        width: 100%; max-height: calc(100dvh - 1rem);
+        border-radius: 12px;
+    }
+    .tool-modal-header { padding: .875rem 1rem; }
+    .tool-modal-body { padding: 1rem; overflow-x: auto; }
+    .map-hud { bottom: 8px; width: calc(100% - 1rem); }
+    .map-hud-card { padding: 10px 12px; }
+    .leaflet-popup-content { max-width: calc(100vw - 90px); }
+}
+
+@media (max-width: 380px) {
+    .header-actions .icon-btn { width: 36px; height: 36px; }
+    #appHeader { padding-inline: .5rem; }
+    .sd-meta-grid { grid-template-columns: 1fr; }
+    .map-hud-value { font-size: 22px; }
+}

@@ -24,11 +24,12 @@
 
     <body class="bg-gray-100">
 
-        <div class="flex h-screen p-2 gap-2">
+        <div id="appShell" class="flex h-screen p-2 gap-2">
+            <div id="sidebarBackdrop" class="sidebar-backdrop" hidden></div>
 
             <!-- Sidebar -->
 
-            <aside
+            <aside id="appSidebar"
                 class="w-72 rounded-xl bg-gradient-to-b from-indigo-700 via-violet-600 to-indigo-700 text-white flex flex-col shadow-xl min-h-0 overflow-hidden">
 
                 <!-- GIS Hero Card -->
@@ -172,15 +173,16 @@
 
             <!-- Right Side -->
 
-            <div class="flex-1 flex flex-col gap-2">
+            <div id="appMain" class="flex-1 flex flex-col gap-2 min-w-0">
 
                 <!-- Header -->
 
-                <header
+                <header id="appHeader"
                     class="h-16 bg-white rounded-xl shadow flex items-center justify-between px-6">
 
-                    <div>
-
+                    <div class="header-brand">
+                        <button id="menuToggle" type="button" class="icon-btn mobile-menu-toggle" aria-label="Open menu" aria-controls="appSidebar" aria-expanded="false"><i data-lucide="menu"></i></button>
+                        <div>
                         <h1 class="font-bold text-xl">
                             GeoVista
                         </h1>
@@ -193,7 +195,8 @@
 
                     </div>
 
-                    <div class="relative w-96">
+                        </div>
+                    <div class="relative w-96 header-search">
                         <input
                             id="searchInput"
                             placeholder="Search location or lat,lng..."
@@ -201,7 +204,7 @@
                         <div id="searchResults" class="search-results hidden"></div>
                     </div>
 
-                    <div class="flex gap-3">
+                    <div class="flex gap-3 header-actions">
 
                         <button id="locateBtn" class="icon-btn" title="Locate Me"><i data-lucide="locate-fixed"></i></button>
 

@@ -52,6 +52,28 @@ initMapStatusBar(map);
 initStatsBar(map);
 initPanelModal();
 
+const sidebar = document.getElementById("appSidebar");
+const menuToggle = document.getElementById("menuToggle");
+const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+function setMobileMenu(open) {
+    sidebar.classList.toggle("mobile-open", open);
+    sidebarBackdrop.hidden = !open;
+    menuToggle.setAttribute("aria-expanded", String(open));
+    menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+}
+menuToggle.addEventListener("click", () => setMobileMenu(!sidebar.classList.contains("mobile-open")));
+sidebarBackdrop.addEventListener("click", () => setMobileMenu(false));
+sidebar.querySelectorAll(".menu-btn").forEach(button =>
+    button.addEventListener("click", () => setMobileMenu(false))
+);
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") setMobileMenu(false);
+});
+window.matchMedia("(min-width: 769px)").addEventListener("change", event => {
+    if (event.matches) setMobileMenu(false);
+});
+
+
 document
     .getElementById("layersBtn")
     .addEventListener("click", () => {
